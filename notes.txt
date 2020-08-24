@@ -1,0 +1,12 @@
+﻿
+Missing packages
+================
+
+sudo aptitude install \
+  libacl1-dev \
+  libcap-dev \
+  libncurses-dev \
+  realpath \
+  ;
+
+

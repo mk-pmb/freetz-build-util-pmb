@@ -1,0 +1,21 @@
+{ "name": "freetz-build-util-pmb",
+  "version": "0.0.1",
+  "description": "Tools for building Freetz",
+  "keywords": [],
+
+  "author": "M.K. (https://github.com/mk-pmb)",
+  "homepage": "https://github.com/mk-pmb/freetz-build-util-pmb/#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mk-pmb/freetz-build-util-pmb.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mk-pmb/freetz-build-util-pmb/issues"
+  },
+  "contributors": [],
+
+  "private": true, "license": "ISC",
+
+
+  "npm vs. BOM = Unexpected token": "-*- coding: UTF-8 -*-"
+}
