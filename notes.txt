@@ -10,3 +10,18 @@ sudo aptitude install \
   ;
 
 
+
+Additional download sources
+===========================
+
+Replacements for broken links
+-----------------------------
+
+* dropbear:
+  [Author's download site](https://matt.ucc.asn.au/dropbear/releases/)
+* OpenSSH:
+  [ftp.openbsd.org](http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/)
+  [ftp.vim.org](http://ftp.vim.org/security/OpenSSH/)
+
+
+
