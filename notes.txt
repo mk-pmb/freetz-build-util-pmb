@@ -19,9 +19,13 @@ Replacements for broken links
 
 * dropbear:
   [Author's download site](https://matt.ucc.asn.au/dropbear/releases/)
+* git:
+  [Oregon State University](https://ftp.osuosl.org/pub/blfs/conglomeration/git/)
 * OpenSSH:
   [ftp.openbsd.org](http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/)
   [ftp.vim.org](http://ftp.vim.org/security/OpenSSH/)
 
 
+* TinyProxy:
+  [launchpad](https://launchpad.net/tinyproxy/1.8/1.8.2)
 
