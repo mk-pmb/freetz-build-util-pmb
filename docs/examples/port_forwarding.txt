@@ -1,0 +1,68 @@
+﻿*filter
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+
+# Allow all traffic inside localhost:
+-A INPUT -s 127.0.0.0/16 -d 127.0.0.0/16 -i lo -j ACCEPT
+
+# Allow all traffic from the rescue LAN (recover-image.exe):
+-A INPUT -s 169.254.0.0/16 -i eth0 -j ACCEPT
+
+# Allow admin access via wired ethernet ports:
+-A INPUT -p tcp -i eth0 -m multiport --dport 22,80,81 -j ACCEPT
+
+# Allow all traffic within the same LAN:
+# ATTN: This includes the admin ports above, unless explicitly blocked.
+-A INPUT -i eth0 -s 192.168.9.0/24 -d 192.168.9.0/24 -j ACCEPT
+-A INPUT -i wlan -s 192.168.0.0/24 -d 192.168.0.0/24 -j ACCEPT
+
+# Allow UPnP:
+-A INPUT -d 224.0.0.1/24 -j ACCEPT
+-A OUTPUT -d 224.0.0.1/24 -j ACCEPT
+
+# Allow all ICMP: (you might want to limit this to ping)
+-A FORWARD -p icmp -i eth0 -j ACCEPT
+-A FORWARD -p icmp -i wlan -j ACCEPT
+
+# Allow all TCP:
+-A FORWARD -p tcp -i eth0 -j ACCEPT
+-A FORWARD -p tcp -i wlan -j ACCEPT
+
+# Log into dmesg what traffic will be DROPped by default policies:
+-A INPUT -j LOG --log-prefix "[ipt] INPUT denied:  "
+-A FORWARD -j LOG --log-prefix "[ipt] FORWARD denied:  "
+
+COMMIT
+
+*nat
+:PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+:OUTPUT ACCEPT [0:0]
+
+:NAT_FIX_SRC - [0:0]
+# Explicitly select which IP addresses to use for outgoing NATed packages.
+# Would be way too easy if NF could just use the interface's primary IP.
+-A NAT_FIX_SRC -p tcp -o eth0 -j SNAT --to-source 192.168.9.6
+-A NAT_FIX_SRC -p tcp -o wlan -j SNAT --to-source 192.168.0.1
+-A POSTROUTING -j NAT_FIX_SRC
+
+:PORT_FWD - [0:0]
+# Finally, the stuff we're actually interested in.
+
+# easy: Mapping a port (range) to same ports.
+-A PORT_FWD -p tcp --dport 7 -j DNAT --to-destination 192.168.9.4:7007
+
+# pitfall: Mapping a port range to a shifted port range.
+# It might probably be this easy…
+-A PORT_FWD -p tcp --dport 400:499 -j DNAT --to-destination 192.168.0.4:2100-2199
+# … if your kernel has this patch from December 2017:
+# https://patchwork.ozlabs.org/project/netfilter-devel/patch/3d98278c-6c33-72e1-163d-2f6270060620@dtsystems.be/
+#
+# In contrast, with an old 2.6.13-ish vanilla kernel, the entire source
+# port range is mapped to the first port of the destination range. :-(
+
+# Finally, let's not forget to enable our chain:
+-A PREROUTING -j PORT_FWD
+
+COMMIT
